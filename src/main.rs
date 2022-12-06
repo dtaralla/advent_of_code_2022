@@ -8,6 +8,9 @@ use std::time;
 #[advent_of_code(1, 2022)]
 struct CalorieCounting;
 
+#[advent_of_code(2, 2022)]
+struct RockPaperScissors;
+
 declare_exercise_modules!();
 
 fn main() -> Result<()> {
