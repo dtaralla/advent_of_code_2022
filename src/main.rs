@@ -16,6 +16,9 @@ struct RockPaperScissors;
 #[advent_of_code(3, 2022)]
 struct RucksackReorganization;
 
+#[advent_of_code(4, 2022)]
+struct CampCleanup;
+
 declare_exercise_modules!();
 
 fn main() -> Result<()> {
