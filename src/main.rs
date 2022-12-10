@@ -1,3 +1,5 @@
+#![feature(iter_array_chunks)]
+
 use anyhow::{Error, Result};
 use aoc_core::AdventOfCodeRunnable;
 use clap::{arg, value_parser, ArgAction, Command};
@@ -10,6 +12,9 @@ struct CalorieCounting;
 
 #[advent_of_code(2, 2022)]
 struct RockPaperScissors;
+
+#[advent_of_code(3, 2022)]
+struct RucksackReorganization;
 
 declare_exercise_modules!();
 
