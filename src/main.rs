@@ -3,7 +3,7 @@ use aoc_core::AdventOfCodeRunnable;
 use clap::{arg, value_parser, ArgAction, Command};
 use macro_support::{advent_of_code, declare_exercise_modules, get_available_exercises};
 use std::thread::sleep;
-use std::time;
+use std::{fs, time};
 
 #[advent_of_code(1, 2022)]
 struct CalorieCounting;
@@ -24,8 +24,9 @@ fn main() -> Result<()> {
             Command::new("run")
                 .about("Runs the given exercise")
                 .arg(
-                    arg!(--id <ID> "The OAUTH session ID (cookie) for adventofcode.com")
-                        .required(true),
+                    arg!(--id <ID> 
+                        "The OAUTH session ID (cookie) for adventofcode.com (if not given expects \
+                        to find it as the content (no BOM!) of a file session_id next to this executable)"),
                 )
                 .arg(arg!(<YEAR> "Year of the exercise to run").value_parser(value_parser!(u16)))
                 .arg(arg!(<DAY> "Day of the exercise to run").value_parser(value_parser!(u8)))
@@ -39,16 +40,16 @@ fn main() -> Result<()> {
     let es: Vec<Box<dyn AdventOfCodeRunnable>> = get_available_exercises!();
 
     if matches.subcommand_matches("clearcache").is_some() {
-        std::fs::remove_dir_all(aoc_core::CACHE_DIR)?;
+        fs::remove_dir_all(aoc_core::CACHE_DIR)?;
         sleep(time::Duration::from_millis(100));
-        std::fs::create_dir(aoc_core::CACHE_DIR)?;
-        std::fs::write(format!("{}/.keep", aoc_core::CACHE_DIR), "")?;
+        fs::create_dir(aoc_core::CACHE_DIR)?;
+        fs::write(format!("{}/.keep", aoc_core::CACHE_DIR), "")?;
         return Ok(());
     }
 
     if matches.subcommand_matches("ls").is_some() {
         for e in es.iter() {
-            println!("{}", e);
+            println!("{e}");
         }
         return Ok(());
     }
@@ -59,7 +60,11 @@ fn main() -> Result<()> {
     }
 
     let run_cmd = run_cmd.unwrap();
-    let session_id: &String = run_cmd.get_one("id").unwrap();
+    let session_id = if let Some(id) = run_cmd.get_one::<String>("id") {
+        id.clone()
+    } else {
+        fs::read_to_string("session_id")?
+    };
     let year: u16 = *run_cmd.get_one("YEAR").unwrap();
     let day: u8 = *run_cmd.get_one("DAY").unwrap();
 
@@ -71,25 +76,22 @@ fn main() -> Result<()> {
     }
 
     if selected_ex.is_none() {
-        println!(
-            "Exercise of Dec {}, {} is not implemented. Exiting...",
-            day, year
-        );
+        println!("Exercise of Dec {day}, {year} is not implemented. Exiting...");
         return Ok(());
     }
 
     let selected_ex = selected_ex.unwrap();
     let result = match run_cmd.get_flag("second") {
         true => {
-            let input = selected_ex.get_input(session_id, true)?;
+            let input = selected_ex.get_input(session_id.trim(), true)?;
             selected_ex.run2(&input)?
         }
         false => {
-            let input = selected_ex.get_input(session_id, false)?;
+            let input = selected_ex.get_input(session_id.trim(), false)?;
             selected_ex.run(&input)?
         }
     };
 
-    println!("Result: {}", result);
+    println!("Result: {result}");
     Ok(())
 }

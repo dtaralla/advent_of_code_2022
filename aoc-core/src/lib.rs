@@ -38,6 +38,7 @@ pub fn get_input(session_id: &str, day: u8, year: u16, _is_second: bool) -> Resu
         let c = blocking::ClientBuilder::default()
             .default_headers(headers)
             .build()?;
+
         input = c
             .execute(
                 c.get(format!(
@@ -46,6 +47,7 @@ pub fn get_input(session_id: &str, day: u8, year: u16, _is_second: bool) -> Resu
                 ))
                 .build()?,
             )?
+            .error_for_status()?
             .text()?;
 
         // Cache it
