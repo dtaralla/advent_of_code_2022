@@ -1,6 +1,4 @@
-﻿use std::str::Chars;
-
-struct LetterField(u64);
+﻿pub struct LetterField(pub u64);
 
 impl Default for LetterField {
     fn default() -> Self {
@@ -8,8 +6,17 @@ impl Default for LetterField {
     }
 }
 
+impl std::fmt::Display for LetterField {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        for i in 0..64 {
+            write!(f, "{}", if self.0 & (1 << i) > 0 { 1 } else { 0 })?;
+        }
+        Ok(())
+    }
+}
+
 impl LetterField {
-    fn ascii_to_bitfield_index(c: &char) -> usize {
+    pub fn ascii_to_bitfield_index(c: &char) -> usize {
         if c.is_ascii_uppercase() {
             (*c as usize) - 65 + 26 // 26..52 for A..Z
         } else {
@@ -17,11 +24,11 @@ impl LetterField {
         }
     }
 
-    fn combine_with(&self, other: &LetterField) -> Self {
+    pub fn combine_with(&self, other: &LetterField) -> Self {
         Self(self.0 & other.0)
     }
 
-    fn first_true_bit_index(&self) -> usize {
+    pub fn first_true_bit_index(&self) -> usize {
         let mut index: usize = 0;
         while (self.0 & (1 << index)) == 0 {
             index += 1;
@@ -30,8 +37,8 @@ impl LetterField {
     }
 }
 
-impl From<Chars<'_>> for LetterField {
-    fn from(value: Chars) -> Self {
+impl<T: Iterator<Item = char>> From<T> for LetterField {
+    fn from(value: T) -> Self {
         let mut field = Self::default();
         for c in value {
             field.0 |= 1 << Self::ascii_to_bitfield_index(&c);

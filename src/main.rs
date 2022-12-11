@@ -24,6 +24,9 @@ struct CampCleanup;
 #[advent_of_code(5, 2022)]
 struct SupplyStack;
 
+#[advent_of_code(6, 2022)]
+struct TuningTrouble;
+
 declare_exercise_modules!();
 
 fn main() -> Result<()> {
