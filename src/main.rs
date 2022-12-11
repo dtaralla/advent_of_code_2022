@@ -1,4 +1,6 @@
 #![feature(iter_array_chunks)]
+#![feature(slice_take)]
+#![feature(get_many_mut)]
 
 use anyhow::{Error, Result};
 use aoc_core::AdventOfCodeRunnable;
@@ -18,6 +20,9 @@ struct RucksackReorganization;
 
 #[advent_of_code(4, 2022)]
 struct CampCleanup;
+
+#[advent_of_code(5, 2022)]
+struct SupplyStack;
 
 declare_exercise_modules!();
 
