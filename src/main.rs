@@ -27,6 +27,9 @@ struct SupplyStack;
 #[advent_of_code(6, 2022)]
 struct TuningTrouble;
 
+#[advent_of_code(7, 2022)]
+struct NoSpaceLeftOnDevice;
+
 declare_exercise_modules!();
 
 fn main() -> Result<()> {
