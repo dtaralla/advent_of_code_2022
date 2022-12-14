@@ -30,6 +30,9 @@ struct TuningTrouble;
 #[advent_of_code(7, 2022)]
 struct NoSpaceLeftOnDevice;
 
+#[advent_of_code(8, 2022)]
+struct TreetopTreeHouse;
+
 declare_exercise_modules!();
 
 fn main() -> Result<()> {
